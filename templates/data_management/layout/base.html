@@ -1,0 +1,22 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="{% static "js/browser@4.js" %}"></script>
+    <script src="{% static "js/htmx.min.js" %}"></script>
+    <link rel="stylesheet" href="{% static 'css/daisyui@5.css' %}">
+    <link rel="stylesheet" href="{% static 'css/themes.css' %}">
+    <title>
+        {% block title %}
+        
+        {% endblock title %} 
+    </title>
+</head>
+<body>
+    {% block content %}
+    
+    {% endblock content %}
+</body>
+</html>
