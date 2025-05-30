@@ -1,7 +1,5 @@
 from django.shortcuts import render
 
 def dashboard(request):
-    context = {
-        
-    }
+    context = {}
     return render(request, 'data_management/index.html', context)

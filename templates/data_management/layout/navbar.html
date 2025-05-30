@@ -1,0 +1,57 @@
+{% load static %}
+
+<div class="navbar shadow-sm bg-base-100">
+  <div class="navbar-start">
+    <div class="dropdown">
+      <div tabindex="0" role="button" class="btn btn-ghost lg:hidden">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h8m-8 6h16" /> </svg>
+      </div>
+      <ul
+        tabindex="0"
+        class="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
+        <li><a href="/admin">Admin Dashboard</a></li>
+         <li>
+          <a>Patients</a>
+          <ul class="p-2">
+            <li><a>Alerts</a></li>
+            <li><a>Reports</a></li>
+          </ul>
+        </li>
+        <li><a>Settings</a></li>
+      </ul>
+    </div>
+    <a class="btn btn-ghost text-xl" href="{% url "dashboard" %}">XYZ hospital</a>
+  </div>
+  <div class="navbar-center hidden lg:flex">
+    <ul class="menu menu-horizontal px-1">
+      <li><a href="/admin">Admin Dashboard</a></li>
+      <li>
+        <details class="z-10">
+          <summary>Patients</summary>
+          <ul class="p-2">
+            <li><a>Alerts</a></li>
+            <li><a>Reports</a></li>
+          </ul>
+        </details>
+      </li>
+      <li><a>Settings</a></li>
+    </ul>
+  </div>
+  <div class="navbar-end">
+    {% comment %} <div class="mx-3">
+      {% include "partials/theme_controller.html" %}
+    </div> {% endcomment %}
+    {% if request.user.is_authenticated %}
+    <div class="avatar avatar-online avatar-placeholder">
+     <div class="w-9 rounded-full">
+      
+     
+      <img src="{% static "img/heart-with-pulse.png" %}"></img>
+      
+    </div>
+    </div>
+    {% else %}
+      <span class="btn btn-link"><a href="{% url "" %}">Login</a></span>
+     {% endif %}
+  </div>
+</div>
