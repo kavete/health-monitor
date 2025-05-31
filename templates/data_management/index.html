@@ -4,11 +4,12 @@
     Dashboard
 {% endblock title %}
 
-{% include "data_management/layout/navbar.html" %}
+
 {% block content %}
-    <div class="container">
-        <h1>Dashboard</h1>
-    </div>
+{% include "data_management/layout/navbar.html" %}
+{% include "data_management/layout/hero.html" %}
+  
+{% include "data_management/layout/footer.html" %}
 {% endblock content %}
 
-{% include "data_management/layout/footer.html" %}
+
