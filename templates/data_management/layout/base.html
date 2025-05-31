@@ -1,0 +1,22 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% comment %} <script src="{% static "js/browser@4.js" %}"></script> {% endcomment %}
+    <script src="{% static "js/htmx.min.js" %}"></script>
+    {% comment %} <link rel="stylesheet" href="{% static 'css/daisyui@5.css' %}"> {% endcomment %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <title>
+        {% block title %}
+        
+        {% endblock title %} 
+    </title>
+</head>
+<body class="min-h-screen">
+    {% block content %}
+    
+    {% endblock content %}
+</body>
+</html>

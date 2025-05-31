@@ -6,10 +6,19 @@
 
 
 {% block content %}
+
+
 {% include "data_management/layout/navbar.html" %}
+
 {% include "data_management/layout/hero.html" %}
-  
+
+{% include "data_management/snippets/ward-conditions.html" %}
+
+{% include "data_management/snippets/ward-comparison.html" %}
+
 {% include "data_management/layout/footer.html" %}
+
+
 {% endblock content %}
 
 

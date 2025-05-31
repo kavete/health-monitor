@@ -1,0 +1,14 @@
+{% extends "data_management/layout/base.html" %}
+
+{% block title %}
+    Ward name
+{% endblock title %}
+
+{% block content %}
+{% include "data_management/layout/navbar.html" %}
+    <div class="container">
+        <h1>Ward Status</h1>
+        {% include "data_management/snippets/ward-status.html" %}
+    </div>
+{% include "data_management/layout/footer.html" %}
+{% endblock content %}
