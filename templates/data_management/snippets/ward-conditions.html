@@ -1,7 +1,10 @@
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+{% if ward_conditions %}
+{% for ward_condition in ward_conditions  %}
 <div class="card bg-base-100 shadow-xl hover:shadow-2xl transition-all duration-300 border-l-4 border-l-primary">
     <div class="card-body">
         <div class="flex justify-between items-start mb-4">
-            <h2 class="card-title text-xl"> wc.ward.name</h2>
+            <h2 class="card-title text-xl"> {{ ward_condition.ward.name }}</h2>
             <div class="badge badge-success badge-sm">Active</div>
         </div>
         
@@ -14,7 +17,7 @@
                     </svg>
                 </div>
                 <div class="stat-title text-xs">Temperature</div>
-                <div class="stat-value text-lg text-red-600" data-temp=""> wc.temperature °C</div>
+                <div class="stat-value text-lg text-red-600" data-temp=""> {{ ward_condition.temperature }}°C</div>
             </div>
             
             <div class="stat rounded-lg p-3">
@@ -24,17 +27,17 @@
                     </svg>
                 </div>
                 <div class="stat-title text-xs">Humidity</div>
-                <div class="stat-value text-lg text-blue-600" data-humidity=" wc.humidity"> wc.humidity %</div>
+                <div class="stat-value text-lg text-blue-600" data-humidity=" wc.humidity"> {{ ward_condition.humidity }}%</div>
             </div>
         </div>
         
         
         <div class="text-sm text-gray-500 mb-4">
-            Last Updated: <span data-timestamp=" wc.timestamp|date:'c' "> wc.timestamp|date:'Y-m-d H:i' </span>
+            Last Updated: <span data-timestamp=" wc.timestamp|date:'c' "> {{ ward_condition.timestamp|date:'Y-m-d H:i' }} </span>
         </div>
         
         <div class="card-actions justify-end">
-            <a href="" class="btn btn-primary btn-sm">
+            <a href="{% url "ward_detail" ward_condition.ward.slug %}" class="btn btn-primary btn-sm">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
@@ -44,7 +47,8 @@
         </div>
     </div>
 </div>
-
+{% endfor %}
+{% else %}
 <div class="col-span-full">
     <div class="alert alert-warning">
         <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
@@ -53,4 +57,5 @@
         <span>No ward data available. Please check your sensors and connections.</span>
     </div>
 </div>
-
+{% endif %}
+</div>

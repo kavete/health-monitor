@@ -7,8 +7,16 @@
 {% block content %}
 {% include "data_management/layout/navbar.html" %}
     <div class="container">
-        <h1>Ward Status</h1>
+        <div class="flex justify-center items-center text-3xl m-4">
+            <h1>{{ latest_condition.ward.name }}</h1>
+        </div>
+        
         {% include "data_management/snippets/ward-status.html" %}
+    </div>
+
+    <div class="container">
+        {% include "data_management/snippets/ward-data.html" %}
+        {% include "data_management/snippets/ward-patient-vitals.html" %}
     </div>
 {% include "data_management/layout/footer.html" %}
 {% endblock content %}
