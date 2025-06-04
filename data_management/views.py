@@ -1,14 +1,20 @@
 from django.shortcuts import get_object_or_404, render
 from .models import Ward, Patient, Doctor, Microcontroller, Bed, WardReading, PatientVitals
 from django.db.models import Max
+from django.utils.timezone import now
 
-def dashboard(request):
-    ward_count = Ward.objects.count()
-    patient_count = Patient.objects.count()
-    doctor_count = Doctor.objects.count()
-    bed_count = Bed.objects.count()
-    microcontroller_count = Microcontroller.objects.count()
 
+def get_dashboard_stats():
+    return {
+        'ward_count': Ward.objects.count(),
+        'patient_count': Patient.objects.count(),
+        'doctor_count': Doctor.objects.count(),
+        'bed_count': Bed.objects.count(),
+        'microcontroller_count': Microcontroller.objects.count(),
+    }
+
+
+def get_latest_ward_conditions():
     latest_per_ward = (
         WardReading.objects.values('ward')
         .annotate(latest=Max('timestamp'))
@@ -18,13 +24,15 @@ def dashboard(request):
         WardReading.objects.filter(ward=entry['ward'], timestamp=entry['latest']).first()
         for entry in latest_per_ward
     ]
+    return latest_conditions
+
+
+def dashboard(request):
+    stats= get_dashboard_stats()
+    latest_conditions = get_latest_ward_conditions()
     context = {
         'ward_conditions': latest_conditions,
-        'ward_count': ward_count,
-        'patient_count': patient_count,
-        'doctor_count': doctor_count,
-        'bed_count': bed_count,
-        'microcontroller_count': microcontroller_count,
+        **stats,
     }
     return render(request, 'data_management/index.html', context)
 
@@ -47,3 +55,31 @@ def ward_details(request, ward_slug):
     }
     
     return render(request, 'data_management/ward-details.html', context)
+
+
+def htmx_check(request):
+    return render(request, 'data_management/htmx-check.html')
+
+
+def htmx_response(request):
+    current_time = now().strftime("%H:%M:%S")
+    context = {
+        'current_time': current_time,
+    }
+    return render(request, 'data_management/snippets/htmx-response.html', context)
+
+
+def htmx_dashboard_stats(request):
+    stats = get_dashboard_stats()
+    context = {
+        **stats,
+    }
+    return render(request, 'data_management/snippets/dashboard-stats.html', context)
+
+
+def htmx_ward_conditions(request):
+    latest_condition = get_latest_ward_conditions()
+    context = {
+        'ward_conditions': latest_condition,
+    }
+    return render(request, 'data_management/snippets/ward-conditions.html', context)

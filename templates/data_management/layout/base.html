@@ -13,10 +13,36 @@
         
         {% endblock title %} 
     </title>
+   
 </head>
 <body class="min-h-screen">
     {% block content %}
     
     {% endblock content %}
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const themeToggle = document.querySelector('.theme-controller');
+
+    // Only run if the checkbox exists
+    // if (!themeToggle) return;
+
+    // Apply saved theme on load
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark' || savedTheme === 'light') {
+      document.documentElement.setAttribute('data-theme', savedTheme);
+      themeToggle.checked = savedTheme === 'dark';
+    }
+
+    // Listen to checkbox toggle
+    themeToggle.addEventListener('change', function () {
+      const theme = this.checked ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', theme);
+      localStorage.setItem('theme', theme);
+    });
+  });
+</script>
+
+
 </body>
 </html>

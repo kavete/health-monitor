@@ -12,7 +12,14 @@
 
 {% include "data_management/layout/hero.html" %}
 
-{% include "data_management/snippets/ward-conditions.html" %}
+<div 
+    hx-get="{% url 'htmx-ward-conditions' %}"
+    hx-trigger="every 2s"
+    hx-swap="innerHTML"
+>
+    {% include "data_management/snippets/ward-conditions.html" %}
+</div>
+
 
 
 {% include "data_management/snippets/ward-comparison.html" %}

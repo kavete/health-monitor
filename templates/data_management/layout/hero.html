@@ -8,6 +8,11 @@
         Monitor ward conditions and patient vitals in real time.
       </p>
     </div>
-        {% include "data_management/snippets/dashboard-stats.html" %}
+     <div hx-get="{% url 'htmx-dashboard-stats' %}"
+          hx-trigger="every 5s"
+          hx-swap="innerHTML">
+      {% include "data_management/snippets/dashboard-stats.html" %}
+     </div>
+        
   </div>
 </div>
