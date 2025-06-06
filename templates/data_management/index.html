@@ -20,9 +20,12 @@
     {% include "data_management/snippets/ward-conditions.html" %}
 </div>
 
+<div id="chart-container">
+    {% include "data_management/snippets/ward-comparison.html" %}
+</div>
 
 
-{% include "data_management/snippets/ward-comparison.html" %}
+{% comment %} {% include "data_management/snippets/ward-comparison.html" %} {% endcomment %}
 
 
 {% include "data_management/layout/footer.html" %}
@@ -30,4 +33,7 @@
 
 {% endblock content %}
 
+{% block scripts %}
+
+{% endblock scripts %}
 

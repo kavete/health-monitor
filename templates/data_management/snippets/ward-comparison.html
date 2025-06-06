@@ -1,16 +1,31 @@
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8 mt-4">
-    <div class="card bg-base-100 shadow-lg">
-        <div class="card-body w-52 h-52">
+    <div class="card shadow-lg">
+        <div class="card-body">
             <h3 class="card-title text-lg mb-4">
                 Temperature comparison
             </h3>
+            <div style="height: 400px; position: relative;">
+                <canvas id="temperatureChart" style="height: 100%; width: 100%;"></canvas>
+            </div>
         </div>
     </div>
-    <div class="card bg-base-100 shadow-lg">
-        <div class="card-body w-52 h-52">
+    <div class="card shadow-lg">
+        <div class="card-body">
             <h3 class="card-title text-lg mb-4">
                 Humidity comparison
             </h3>
+            <div style="height: 400px; position: relative;">
+                <canvas id="humidityChart" style="height: 100%; width: 100%;"></canvas>
+            </div>
         </div>
     </div>
 </div>
+
+<script id="chart-data" type="application/json">
+{
+  "wards": {{ chart_wards|safe }},
+  "temperature": {{ chart_temperature|safe }},
+  "humidity": {{ chart_humidity|safe }}
+}
+</script>
+
