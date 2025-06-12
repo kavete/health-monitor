@@ -16,7 +16,15 @@
 
     <div class="container">
         {% include "data_management/snippets/ward-data.html" %}
-        {% include "data_management/snippets/ward-patient-vitals.html" %}
+
+        <div
+            hx-get="{% url 'ward-patient-vitals' %}"
+            hx-trigger="every 2s"
+            hx-swap="innerHTML"
+        >
+            {% include "data_management/snippets/ward-patient-vitals.html" %}
+        </div>
+
     </div>
 {% include "data_management/layout/footer.html" %}
 {% endblock content %}

@@ -48,7 +48,6 @@ class Microcontroller(models.Model):
             return self.assigned_bed
         except (AttributeError, Bed.DoesNotExist):
             return None
-    
 
 class Ward(models.Model):
     name = models.CharField(max_length=100, unique=True)

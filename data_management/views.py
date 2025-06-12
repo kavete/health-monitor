@@ -74,17 +74,20 @@ def dashboard_charts_json(request):
         'humidity': json.loads(comparison_chart_data['chart_humidity']),
     })
 
-
-def ward_details(request, ward_slug):
-    ward = get_object_or_404(Ward, slug=ward_slug)
-    latest_condition = WardReading.objects.filter(ward=ward).order_by('-timestamp').first()
+def get_patient_vitals_data():
+    # ward = get_object_or_404(Ward, slug=ward_slug)
     patients_in_ward = Patient.objects.filter(bed__ward=ward).select_related('bed')
-
     patient_vitals = []
     for patient in patients_in_ward:
         latest_vital = PatientVitals.objects.filter(patient=patient).order_by('-timestamp').first()
         if latest_vital:
             patient_vitals.append(latest_vital)
+def ward_details(request, ward_slug):
+    ward = get_object_or_404(Ward, slug=ward_slug)
+    latest_condition = WardReading.objects.filter(ward=ward).order_by('-timestamp').first()
+
+
+
     context = {
         'ward_name': ward.name,
         'ward_slug': ward.slug,
@@ -95,16 +98,16 @@ def ward_details(request, ward_slug):
     return render(request, 'data_management/ward-details.html', context)
 
 
-def htmx_check(request):
-    return render(request, 'data_management/htmx-check.html')
-
-
-def htmx_response(request):
-    current_time = now().strftime("%H:%M:%S")
-    context = {
-        'current_time': current_time,
-    }
-    return render(request, 'data_management/snippets/htmx-response.html', context)
+# def htmx_check(request):
+#     return render(request, 'data_management/htmx-check.html')
+#
+#
+# def htmx_response(request):
+#     current_time = now().strftime("%H:%M:%S")
+#     context = {
+#         'current_time': current_time,
+#     }
+#     return render(request, 'data_management/snippets/htmx-response.html', context)
 
 
 def htmx_dashboard_stats(request):
@@ -121,3 +124,7 @@ def htmx_ward_conditions(request):
         'ward_conditions': latest_condition,
     }
     return render(request, 'data_management/snippets/ward-conditions.html', context)
+
+
+def htmx_ward_patient_vitals(request):
+    pass

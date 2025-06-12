@@ -8,7 +8,10 @@ urlpatterns = [
     # path("htmx_response", views.htmx_response, name="htmx_response"),
     path("dashboard/htmx-dashboard-stats/", views.htmx_dashboard_stats, name="htmx-dashboard-stats"),
     path("dashboard/htmx-ward-conditions/", views.htmx_ward_conditions, name="htmx-ward-conditions"),
+
     path("dashboard/htmx-charts/", views.dashboard_charts, name="htmx-dashboard-charts"),
-    path("dashboard/htmx-charts-json/", views.dashboard_charts_json, name="htmx-dashboard-charts-json")
+    path("dashboard/htmx-charts-json/", views.dashboard_charts_json, name="htmx-dashboard-charts-json"),
+
+    path("ward/htmx-patient-vitals/", views.htmx_ward_patient_vitals, name="ward-patient-vitals"),
     
 ]
