@@ -193,3 +193,63 @@ def ward_chart_data(request, ward_slug):
         'light_intensity': light_intensity_data,
         'ward_name': ward.name
     })
+
+def patient_details(request, patient_id):
+    """
+    Patient detail view showing vitals and charts
+    """
+    patient = get_object_or_404(Patient, pk=patient_id)
+    latest_vitals = PatientVitals.objects.filter(patient=patient).order_by('-timestamp').first()
+
+    context = {
+        'patient': patient,
+        'latest_vitals': latest_vitals,
+    }
+
+    return render(request, 'data_management/patient.html', context)
+
+def htmx_patient_vitals_status(request, patient_id):
+    """
+    HTMX endpoint to return current patient vitals status
+    """
+    patient = get_object_or_404(Patient, pk=patient_id)
+    latest_vitals = PatientVitals.objects.filter(patient=patient).order_by('-timestamp').first()
+
+    context = {
+        'patient': patient,
+        'latest_vitals': latest_vitals,
+    }
+
+    return render(request, 'data_management/snippets/patient-vitals-status.html', context)
+
+def patient_chart_data(request, patient_id):
+    """
+    Returns historical patient vitals data as JSON for Chart.js
+    """
+    patient = get_object_or_404(Patient, pk=patient_id)
+
+    # Get the last 20 readings for the patient
+    patient_vitals = PatientVitals.objects.filter(patient=patient).order_by('-timestamp')[:20]
+    patient_vitals = list(reversed(patient_vitals))  # Reverse to chronological order
+
+    # Prepare data for Chart.js
+    labels = []
+    heart_rate_data = []
+    temperature_data = []
+    oxygen_saturation_data = []
+
+    for vital in patient_vitals:
+        # Convert UTC timestamp to local timezone before formatting
+        local_time = timezone.localtime(vital.timestamp)
+        labels.append(local_time.strftime('%H:%M'))
+        heart_rate_data.append(int(vital.heart_rate) if vital.heart_rate else 0)
+        temperature_data.append(float(vital.temperature) if vital.temperature else 0)
+        oxygen_saturation_data.append(float(vital.oxygen_saturation) if vital.oxygen_saturation else 0)
+
+    return JsonResponse({
+        'labels': labels,
+        'heart_rate': heart_rate_data,
+        'temperature': temperature_data,
+        'oxygen_saturation': oxygen_saturation_data,
+        'patient_name': patient.user.get_full_name() if patient.user else 'Unknown Patient'
+    })

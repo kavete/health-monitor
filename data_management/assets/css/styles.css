@@ -8,8 +8,10 @@
     --font-serif: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
     --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
       "Courier New", monospace;
+    --color-red-400: oklch(70.4% 0.191 22.216);
     --color-red-500: oklch(63.7% 0.237 25.331);
     --color-red-600: oklch(57.7% 0.245 27.325);
+    --color-orange-400: oklch(75% 0.183 55.934);
     --color-orange-500: oklch(70.5% 0.213 47.604);
     --color-yellow-100: oklch(97.3% 0.071 103.193);
     --color-yellow-400: oklch(85.2% 0.199 91.936);
@@ -2882,6 +2884,9 @@
   .col-10 {
     grid-column: 10;
   }
+  .col-span-3 {
+    grid-column: span 3 / span 3;
+  }
   .col-span-full {
     grid-column: 1 / -1;
   }
@@ -5606,6 +5611,9 @@
   .text-info {
     color: var(--color-info);
   }
+  .text-orange-400 {
+    color: var(--color-orange-400);
+  }
   .text-orange-500 {
     color: var(--color-orange-500);
   }
@@ -5620,6 +5628,9 @@
   }
   .text-purple-600 {
     color: var(--color-purple-600);
+  }
+  .text-red-400 {
+    color: var(--color-red-400);
   }
   .text-red-500 {
     color: var(--color-red-500);
@@ -6272,6 +6283,13 @@
       }
     }
   }
+  .hover\:text-primary {
+    &:hover {
+      @media (hover: hover) {
+        color: var(--color-primary);
+      }
+    }
+  }
   .hover\:shadow-2xl {
     &:hover {
       @media (hover: hover) {
@@ -6304,6 +6322,11 @@
   .md\:grid-cols-2 {
     @media (width >= 48rem) {
       grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  .md\:grid-cols-3 {
+    @media (width >= 48rem) {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
     }
   }
   .lg\:flex {

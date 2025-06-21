@@ -1,0 +1,38 @@
+{% extends "data_management/layout/base.html" %}
+
+{% block title %}
+    Patient Details - {{ patient.user.get_full_name }}
+{% endblock title %}
+
+{% block content %}
+{% include "data_management/layout/navbar.html" %}
+
+<div class="container mx-auto px-4">
+    <div class="flex justify-center items-center text-3xl my-4">
+        <h1>{{ patient.user.get_full_name }}</h1>
+    </div>
+    
+    <div class="text-center mb-6">
+        <p class="text-lg text-gray-600">
+            {{ patient.ward.name }} - 
+            {% if patient.bed %}
+                Bed {{ patient.bed.bed_number }}
+            {% else %}
+                No bed assigned
+            {% endif %}
+        </p>
+    </div>
+    
+    <div
+        hx-get="{% url 'patient-vitals-status' patient_id=patient.pk %}"
+        hx-trigger="every 2s"
+        hx-swap="innerHTML"
+    >
+        {% include "data_management/snippets/patient-vitals-status.html" %}
+    </div>
+
+    {% include "data_management/snippets/patient-vitals-charts.html" %}
+</div>
+
+{% include "data_management/layout/footer.html" %}
+{% endblock content %}

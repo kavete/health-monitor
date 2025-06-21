@@ -1,0 +1,226 @@
+<div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 mb-8 mt-4">
+    <div class="card bg-base-100 shadow-lg">
+        <div class="card-body">
+            <h3 class="card-title text-lg mb-4">Heart Rate Over Time (bpm)</h3>
+            <div class="w-full h-64">
+                <canvas id="heartRateChart"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="card bg-base-100 shadow-lg">
+        <div class="card-body">
+            <h3 class="card-title text-lg mb-4">Temperature Over Time (°C)</h3>
+            <div class="w-full h-64">
+                <canvas id="temperatureChart"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="card bg-base-100 shadow-lg">
+        <div class="card-body">
+            <h3 class="card-title text-lg mb-4">O2 Saturation Over Time (%)</h3>
+            <div class="w-full h-64">
+                <canvas id="oxygenChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const patientId = "{{ patient.pk }}";
+        const chartDataUrl = `/patient/${patientId}/chart-data/`;
+
+        let heartRateChart;
+        let temperatureChart;
+        let oxygenChart;
+
+        function initializeCharts() {
+            // Heart Rate Chart
+            const heartCtx = document.getElementById("heartRateChart").getContext("2d");
+            heartRateChart = new Chart(heartCtx, {
+                type: "line",
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: "Heart Rate (bpm)",
+                        data: [],
+                        borderColor: "rgb(239, 68, 68)",
+                        backgroundColor: "rgba(239, 68, 68, 0.1)",
+                        tension: 0.1,
+                        fill: true,
+                    }],
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            title: {
+                                display: true,
+                                text: "Heart Rate (bpm)",
+                            },
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: "Time",
+                            },
+                        },
+                    },
+                    plugins: {
+                        legend: {
+                            display: false,
+                        },
+                    },
+                },
+            });
+
+            // Temperature Chart - Dynamic scaling
+            const tempCtx = document.getElementById("temperatureChart").getContext("2d");
+            temperatureChart = new Chart(tempCtx, {
+                type: "line",
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: "Temperature (°C)",
+                        data: [],
+                        borderColor: "rgb(251, 146, 60)",
+                        backgroundColor: "rgba(251, 146, 60, 0.1)",
+                        tension: 0.1,
+                        fill: true,
+                    }],
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            title: {
+                                display: true,
+                                text: "Temperature (°C)",
+                            },
+                            // Dynamic scaling - will adjust based on data
+                            grace: '5%', // Add 5% padding above and below the data range
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: "Time",
+                            },
+                        },
+                    },
+                    plugins: {
+                        legend: {
+                            display: false,
+                        },
+                    },
+                },
+            });
+
+            // O2 Saturation Chart - Also make dynamic
+            const oxygenCtx = document.getElementById("oxygenChart").getContext("2d");
+            oxygenChart = new Chart(oxygenCtx, {
+                type: "line",
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: "O2 Saturation (%)",
+                        data: [],
+                        borderColor: "rgb(34, 197, 94)",
+                        backgroundColor: "rgba(34, 197, 94, 0.1)",
+                        tension: 0.1,
+                        fill: true,
+                    }],
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            title: {
+                                display: true,
+                                text: "O2 Saturation (%)",
+                            },
+                            grace: '2%', // Add 2% padding for O2 saturation
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: "Time",
+                            },
+                        },
+                    },
+                    plugins: {
+                        legend: {
+                            display: false,
+                        },
+                    },
+                },
+            });
+        }
+
+        function updateCharts() {
+            fetch(chartDataUrl)
+                .then((response) => response.json())
+                .then((data) => {
+                    console.log('Chart data received:', data);
+
+                    // Update heart rate chart
+                    heartRateChart.data.labels = data.labels;
+                    heartRateChart.data.datasets[0].data = data.heart_rate;
+                    heartRateChart.update();
+
+                    // Update temperature chart with dynamic scaling
+                    temperatureChart.data.labels = data.labels;
+                    temperatureChart.data.datasets[0].data = data.temperature;
+                    
+                    // Calculate temperature range for better scaling
+                    const tempValues = data.temperature.filter(val => val !== null && val !== undefined);
+                    if (tempValues.length > 0) {
+                        const minTemp = Math.min(...tempValues);
+                        const maxTemp = Math.max(...tempValues);
+                        const tempRange = maxTemp - minTemp;
+                        const padding = Math.max(0.5, tempRange * 0.1); // At least 0.5°C padding
+                        
+                        temperatureChart.options.scales.y.min = minTemp - padding;
+                        temperatureChart.options.scales.y.max = maxTemp + padding;
+                    }
+                    
+                    temperatureChart.update();
+
+                    // Update oxygen saturation chart with dynamic scaling
+                    oxygenChart.data.labels = data.labels;
+                    oxygenChart.data.datasets[0].data = data.oxygen_saturation;
+                    
+                    // Calculate O2 saturation range for better scaling
+                    const oxygenValues = data.oxygen_saturation.filter(val => val !== null && val !== undefined);
+                    if (oxygenValues.length > 0) {
+                        const minO2 = Math.min(...oxygenValues);
+                        const maxO2 = Math.max(...oxygenValues);
+                        const o2Range = maxO2 - minO2;
+                        const padding = Math.max(1, o2Range * 0.1); // At least 1% padding
+                        
+                        oxygenChart.options.scales.y.min = Math.max(0, minO2 - padding);
+                        oxygenChart.options.scales.y.max = Math.min(100, maxO2 + padding);
+                    }
+                    
+                    oxygenChart.update();
+                })
+                .catch((error) => {
+                    console.error("Error fetching chart data:", error);
+                });
+        }
+
+        // Initialize charts
+        initializeCharts();
+
+        // Load initial data
+        updateCharts();
+
+        // Update charts every 3 seconds
+        setInterval(updateCharts, 3000);
+    });
+</script>
