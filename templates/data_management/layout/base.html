@@ -8,6 +8,8 @@
     <script src="{% static "js/htmx.min.js" %}"></script>
     {% comment %} <link rel="stylesheet" href="{% static 'css/daisyui@5.css' %}"> {% endcomment %}
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <script src="{% static "js/chart.js" %}"></script>
+    <script src="{% static "js/chart-scripts.js" %}"></script>
     <title>
         {% block title %}
         
@@ -43,6 +45,10 @@
   });
 </script>
 
+{% block scripts %}
+
+
+{% endblock scripts %}
 
 </body>
 </html>

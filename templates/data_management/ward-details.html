@@ -1,22 +1,39 @@
 {% extends "data_management/layout/base.html" %}
 
 {% block title %}
-    Ward name
+    Ward Details
 {% endblock title %}
 
 {% block content %}
 {% include "data_management/layout/navbar.html" %}
-    <div class="container">
-        <div class="flex justify-center items-center text-3xl m-4">
-            <h1>{{ latest_condition.ward.name }}</h1>
-        </div>
-        
+
+<div class="container">
+    <div class="flex justify-center items-center text-3xl m-4">
+        <h1>{{ latest_condition.ward.name }}</h1>
+    </div>
+<div class="container">
+        <div
+        hx-get="{% url 'ward-status' ward_slug=ward_slug %}"
+        hx-trigger="every 5s"
+        hx-swap="innerHTML"
+    >
         {% include "data_management/snippets/ward-status.html" %}
     </div>
+</div>
 
-    <div class="container">
-        {% include "data_management/snippets/ward-data.html" %}
+</div>
+
+<div class="container">
+    {% include "data_management/snippets/ward-data.html" %}
+
+    <div
+        hx-get="{% url 'ward-patient-vitals' ward_slug=ward_slug %}"
+        hx-trigger="every 2s"
+        hx-swap="innerHTML"
+    >
         {% include "data_management/snippets/ward-patient-vitals.html" %}
     </div>
+</div>
+
 {% include "data_management/layout/footer.html" %}
 {% endblock content %}

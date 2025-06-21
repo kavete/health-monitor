@@ -7,8 +7,8 @@
             <h2 class="card-title text-xl"> {{ ward_condition.ward.name }}</h2>
             <div class="badge badge-success badge-sm">Active</div>
         </div>
-        
-        <!-- Temperature and Humidity Display -->
+
+        <!-- Temperature, Humidity, Noise, and Light Display -->
         <div class="grid grid-cols-2 gap-4 mb-4">
             <div class="stat rounded-lg p-3">
                 <div class="stat-figure text-red-500">
@@ -19,7 +19,7 @@
                 <div class="stat-title text-xs">Temperature</div>
                 <div class="stat-value text-lg text-red-600" data-temp=""> {{ ward_condition.temperature }}°C</div>
             </div>
-            
+
             <div class="stat rounded-lg p-3">
                 <div class="stat-figure text-blue-500">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -29,13 +29,33 @@
                 <div class="stat-title text-xs">Humidity</div>
                 <div class="stat-value text-lg text-blue-600" data-humidity=" wc.humidity"> {{ ward_condition.humidity }}%</div>
             </div>
+
+            <div class="stat rounded-lg p-3">
+                <div class="stat-figure text-purple-500">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M9.879 8.464a5 5 0 000 7.072M7.05 5.636a9 9 0 000 12.728" />
+                    </svg>
+                </div>
+                <div class="stat-title text-xs">Noise Level</div>
+                <div class="stat-value text-lg text-purple-600" data-noise=""> {{ ward_condition.noise_level }}dB</div>
+            </div>
+
+            <div class="stat rounded-lg p-3">
+                <div class="stat-figure text-yellow-500">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                    </svg>
+                </div>
+                <div class="stat-title text-xs">Light Intensity</div>
+                <div class="stat-value text-lg text-yellow-600" data-light=""> {{ ward_condition.light_intensity }} lux</div>
+            </div>
         </div>
-        
-        
+
+
         <div class="text-sm text-gray-500 mb-4">
             Last Updated: <span data-timestamp=" wc.timestamp|date:'c' "> {{ ward_condition.timestamp|date:'Y-m-d H:i' }} </span>
         </div>
-        
+
         <div class="card-actions justify-end">
             <a href="{% url "ward_detail" ward_condition.ward.slug %}" class="btn btn-primary btn-sm">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">

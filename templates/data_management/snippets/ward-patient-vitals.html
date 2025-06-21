@@ -1,47 +1,48 @@
-<div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 mb-8">
-{% for vital in patient_vitals  %}
-<div class="card bg-base-100 shadow-lg border-l-4 border-l-primary">
-    <div class="card-body p-4">
-        <h3 class="card-title text-lg">{{ vital.patient.user.username }}</h3>
-        <p class="text-sm text-gray-600 mb-3">
-            {% if vital.patient.bed %}
-                Ward {{ vital.patient.bed.ward.name }} - Bed {{ vital.patient.bed.bed_number }}
-            {% else %}
-                No bed assigned
-            {% endif %}
-        </p>
-        
-        <div class="grid grid-cols-2 gap-3 text-sm">
-            <div class="flex items-center">
-                <span class="w-3 h-3 bg-red-500 rounded-full mr-2"></span>
-                <span class="text-gray-600">Heart Rate:</span>
+<div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 mb-8 m-4">
+    {% for vital in patient_vitals %}
+    <div class="card bg-base-100 shadow-lg border-l-4 border-l-primary">
+        <div class="card-body p-4">
+            <h3 class="card-title text-lg">
+                {{ vital.patient.user.username }}
+            </h3>
+            <p class="text-sm text-gray-600 mb-3">
+                {% if vital.patient.bed %} {{ vital.patient.ward.name }} - Bed {{ vital.patient.bed.bed_number }} {% else %} No bed
+                assigned {% endif %}
+            </p>
+
+            <div class="grid grid-cols-2 gap-3 text-sm">
+                <div class="flex items-center">
+                    <span class="w-3 h-3 bg-red-500 rounded-full mr-2"></span>
+                    <span class="text-gray-600">Heart Rate:</span>
+                </div>
+                <span class="font-semibold"> {{ vital.heart_rate }} bpm</span>
+
+                <div class="flex items-center">
+                    <span
+                        class="w-3 h-3 bg-orange-500 rounded-full mr-2"
+                    ></span>
+                    <span class="text-gray-600">Temperature:</span>
+                </div>
+                <span class="font-semibold">
+                    {{ vital.temperature|floatformat:1 }} °C</span
+                >
+
+                <div class="flex items-center">
+                    <span class="w-3 h-3 bg-green-500 rounded-full mr-2"></span>
+                    <span class="text-gray-600">O2 Saturation:</span>
+                </div>
+                <span class="font-semibold">
+                    {{ vital.oxygen_saturation|floatformat:1 }} %</span
+                >
             </div>
-            <span class="font-semibold"> {{ vital.heart_rate }} bpm</span>
-            
-            {% comment %} <div class="flex items-center">
-                <span class="w-3 h-3 bg-blue-500 rounded-full mr-2"></span>
-                <span class="text-gray-600">Blood Pressure:</span>
+            <div class="text-xs text-gray-500 mt-3">
+                Last updated: {{ vital.timestamp|date:'Y-m-d H:i:s' }}
             </div>
-            <span class="font-semibold">{{ vital.blood_pressure }}</span> {% endcomment %}
-            
-            <div class="flex items-center">
-                <span class="w-3 h-3 bg-orange-500 rounded-full mr-2"></span>
-                <span class="text-gray-600">Temperature:</span>
-            </div>
-            <span class="font-semibold"> {{ vital.temperature|floatformat:1 }} °C</span>
-            
-            <div class="flex items-center">
-                <span class="w-3 h-3 bg-green-500 rounded-full mr-2"></span>
-                <span class="text-gray-600">O2 Saturation:</span>
-            </div>
-            <span class="font-semibold"> {{ vital.oxygen_saturation|floatformat:1 }} %</span>
-        </div>
-          <div class="text-xs text-gray-500 mt-3">
-            Last updated: {{ vital.timestamp|date:'Y-m-d H:i:s'  }}
         </div>
     </div>
-</div>
-{% empty %}
-<p class="text-yellow-500 col-span-full text-center ">No patient vitals available for this ward.</p>
-{% endfor %}
+    {% empty %}
+    <p class="text-yellow-500 col-span-full text-center">
+        No patient vitals available for this ward.
+    </p>
+    {% endfor %}
 </div>

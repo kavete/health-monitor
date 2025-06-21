@@ -38,7 +38,7 @@
     </ul>
   </div>
   <div class="navbar-end">
-  
+
     <label class="swap swap-rotate m-2">
   <!-- this hidden checkbox controls the state -->
   <input type="checkbox" class="theme-controller" />
@@ -63,15 +63,15 @@
 </label>
     {% if request.user.is_authenticated %}
     <div class="avatar avatar-online avatar-placeholder">
-     <div class="w-9 rounded-full">
-      
-     
+     <div class="w-9">
+
+
       <img src="{% static "images/heart-with-pulse.png" %}"></img>
-      
+
     </div>
     </div>
     {% else %}
-      <span class="btn btn-link"><a href="">Login</a></span>
+      <span class="btn btn-link m-4"><a href="">Login</a></span>
      {% endif %}
   </div>
 </div>

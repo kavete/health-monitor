@@ -1,11 +1,11 @@
 from django.contrib import admin
-from django.core.exceptions import ValidationError
+# from django.core.exceptions import ValidationError
 from django.forms import ModelForm
 from .models import Microcontroller, Ward, Bed, Doctor, Patient, WardReading, PatientVitals
 from django.db.models import Q
 from django.contrib.auth.admin import UserAdmin
 from .models import CustomUser
-from django.utils.text import slugify
+# from django.utils.text import slugify
 
 
 class CustomUserAdmin(UserAdmin):
@@ -49,12 +49,12 @@ class BedAdmin(admin.ModelAdmin):
     search_fields = ["ward", "microcontroller"]
     list_filter = ["ward"]
 
-    
+
     def save_model(self, request, obj, form, change):
         obj.full_clean()
         super().save_model(request, obj, form, change)
 
- 
+
 
 class MicrocontrollerAdmin(admin.ModelAdmin):
     list_display = ('identifier', 'name', 'ward', 'bed')
@@ -110,7 +110,7 @@ class DoctorAdmin(admin.ModelAdmin):
 
 
 class WardReadingAdmin(admin.ModelAdmin):
-    list_display = ['ward', 'temperature', 'humidity', 'noise_level']
+    list_display = ['ward', 'temperature', 'humidity', 'noise_level', 'light_intensity']
     list_filter = ["ward"]
     search_fields =["ward__name"]
     ordering = ["-timestamp"]

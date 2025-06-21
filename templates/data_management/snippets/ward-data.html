@@ -1,16 +1,271 @@
-<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8 mt-4">
+<div
+    class="grid grid-cols-1 xl:grid-cols-2 xxl:grid-cols-4 gap-6 mb-8 mt-4 m-4"
+>
     <div class="card bg-base-100 shadow-lg">
-        <div class="card-body w-52 h-52">
-            <h3 class="card-title text-lg mb-4">
-                Temperature Graph
-            </h3>
+        <div class="card-body">
+            <h3 class="card-title text-lg mb-4">Temperature Over Time (°C)</h3>
+            <div class="w-full h-64">
+                <canvas id="temperatureChart"></canvas>
+            </div>
         </div>
     </div>
     <div class="card bg-base-100 shadow-lg">
-        <div class="card-body w-52 h-52">
+        <div class="card-body">
+            <h3 class="card-title text-lg mb-4">Humidity Over Time (%)</h3>
+            <div class="w-full h-64">
+                <canvas id="humidityChart"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="card bg-base-100 shadow-lg">
+        <div class="card-body">
+            <h3 class="card-title text-lg mb-4">Noise Level Over Time (dB)</h3>
+            <div class="w-full h-64">
+                <canvas id="noiseChart"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="card bg-base-100 shadow-lg">
+        <div class="card-body">
             <h3 class="card-title text-lg mb-4">
-                Humidity Graph
+                Light Intensity Over Time (lux)
             </h3>
+            <div class="w-full h-64">
+                <canvas id="lightChart"></canvas>
+            </div>
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const wardSlug = "{{ ward_slug }}";
+        const chartDataUrl = `/ward/${wardSlug}/chart-data/`;
+
+        let temperatureChart;
+        let humidityChart;
+        let noiseChart;
+        let lightChart;
+
+        function initializeCharts() {
+            // Temperature Chart
+            const tempCtx = document
+                .getElementById("temperatureChart")
+                .getContext("2d");
+            temperatureChart = new Chart(tempCtx, {
+                type: "line",
+                data: {
+                    labels: [],
+                    datasets: [
+                        {
+                            label: "Temperature (°C)",
+                            data: [],
+                            borderColor: "rgb(239, 68, 68)",
+                            backgroundColor: "rgba(239, 68, 68, 0.1)",
+                            tension: 0.1,
+                            fill: true,
+                        },
+                    ],
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            title: {
+                                display: true,
+                                text: "Temperature (°C)",
+                            },
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: "Time",
+                            },
+                        },
+                    },
+                    plugins: {
+                        legend: {
+                            display: false,
+                        },
+                    },
+                },
+            });
+
+            // Humidity Chart
+            const humCtx = document
+                .getElementById("humidityChart")
+                .getContext("2d");
+            humidityChart = new Chart(humCtx, {
+                type: "line",
+                data: {
+                    labels: [],
+                    datasets: [
+                        {
+                            label: "Humidity (%)",
+                            data: [],
+                            borderColor: "rgb(59, 130, 246)",
+                            backgroundColor: "rgba(59, 130, 246, 0.1)",
+                            tension: 0.1,
+                            fill: true,
+                        },
+                    ],
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            title: {
+                                display: true,
+                                text: "Humidity (%)",
+                            },
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: "Time",
+                            },
+                        },
+                    },
+                    plugins: {
+                        legend: {
+                            display: false,
+                        },
+                    },
+                },
+            });
+
+            // Noise Chart
+            const noiseCtx = document
+                .getElementById("noiseChart")
+                .getContext("2d");
+            noiseChart = new Chart(noiseCtx, {
+                type: "line",
+                data: {
+                    labels: [],
+                    datasets: [
+                        {
+                            label: "Noise Level (dB)",
+                            data: [],
+                            borderColor: "rgb(168, 85, 247)",
+                            backgroundColor: "rgba(168, 85, 247, 0.1)",
+                            tension: 0.1,
+                            fill: true,
+                        },
+                    ],
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: "Noise Level (dB)",
+                            },
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: "Time",
+                            },
+                        },
+                    },
+                    plugins: {
+                        legend: {
+                            display: false,
+                        },
+                    },
+                },
+            });
+
+            // Light Intensity Chart
+            const lightCtx = document
+                .getElementById("lightChart")
+                .getContext("2d");
+            lightChart = new Chart(lightCtx, {
+                type: "line",
+                data: {
+                    labels: [],
+                    datasets: [
+                        {
+                            label: "Light Intensity (lux)",
+                            data: [],
+                            borderColor: "rgb(251, 191, 36)",
+                            backgroundColor: "rgba(251, 191, 36, 0.1)",
+                            tension: 0.1,
+                            fill: true,
+                        },
+                    ],
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: "Light Intensity (lux)",
+                            },
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: "Time",
+                            },
+                        },
+                    },
+                    plugins: {
+                        legend: {
+                            display: false,
+                        },
+                    },
+                },
+            });
+        }
+
+        function updateCharts() {
+            fetch(chartDataUrl)
+                .then((response) => response.json())
+                .then((data) => {
+                    // Update temperature chart
+                    temperatureChart.data.labels = data.labels;
+                    temperatureChart.data.datasets[0].data = data.temperature;
+                    temperatureChart.update();
+
+                    // Update humidity chart
+                    humidityChart.data.labels = data.labels;
+                    humidityChart.data.datasets[0].data = data.humidity;
+                    humidityChart.update();
+
+                    // Update noise chart
+                    noiseChart.data.labels = data.labels;
+                    noiseChart.data.datasets[0].data = data.noise_level;
+                    noiseChart.update();
+
+                    // Update light intensity chart
+                    lightChart.data.labels = data.labels;
+                    lightChart.data.datasets[0].data = data.light_intensity;
+                    lightChart.update();
+                })
+                .catch((error) => {
+                    console.error("Error fetching chart data:", error);
+                });
+        }
+
+        // Initialize charts
+        initializeCharts();
+
+        // Load initial data
+        updateCharts();
+
+        // Update charts every 5 seconds
+        setInterval(updateCharts, 5000);
+    });
+</script>

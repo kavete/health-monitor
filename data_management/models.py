@@ -16,7 +16,7 @@ class Microcontroller(models.Model):
     )
 
     def __str__(self):
-        return self.identifier
+        return str(self.identifier)
 
     def clean(self):
         if self.identifier:
@@ -48,7 +48,6 @@ class Microcontroller(models.Model):
             return self.assigned_bed
         except (AttributeError, Bed.DoesNotExist):
             return None
-    
 
 class Ward(models.Model):
     name = models.CharField(max_length=100, unique=True)
@@ -64,10 +63,10 @@ class Ward(models.Model):
     )
 
     def __str__(self):
-        return f"Ward {self.name} ({self.location})" if self.location else self.name
+        return f"Ward {self.name} ({self.location})" if self.location else str(self.name)
 
-    
-    
+
+
     def clean(self):
         if self.microcontroller:
             if Bed.objects.filter(microcontroller=self.microcontroller).exists():
@@ -99,7 +98,7 @@ class Bed(models.Model):
                 raise ValidationError(f"Microcontroller {self.microcontroller} is already assigned to a ward.")
             if self.microcontroller.ward and self.microcontroller.ward != self.ward:
                 raise ValidationError(f"Microcontroller {self.microcontroller} is assigned to {self.microcontroller.ward}, not to this bed's ward {self.ward}.")
-    
+
     def save(self, *args, **kwargs):
         self.full_clean()
         super().save(*args, **kwargs)
@@ -107,7 +106,7 @@ class Bed(models.Model):
 
     def __str__(self):
         return f"{self.bed_number} in {self.ward}"
-    
+
 
 class CustomUser(AbstractUser):
     is_doctor = models.BooleanField(default=False)
@@ -117,7 +116,7 @@ class CustomUser(AbstractUser):
 
     def __str__(self):
         return self.username
-    
+
 
 class Patient(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, primary_key=True)
@@ -129,10 +128,10 @@ class Patient(models.Model):
     @property
     def microcontroller(self):
         # Return microcontroller assigned to the patient's bed if bed exists, else None
-        if self.bed:
+        if self.bed and hasattr(self.bed, "microcontroller"):
             return self.bed.microcontroller
         return None
-    
+
     def clean(self):
         # Ensure bed is in same ward
         if self.bed and self.bed.ward != self.ward:
@@ -143,13 +142,13 @@ class Patient(models.Model):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        name = self.user.get_full_name() or self.user.username
-        if self.bed:
+        name = self.user.get_full_name() if self.user and hasattr(self.user, "get_full_name") else (self.user.username if self.user and hasattr(self.user, "username") else "")
+        if self.bed and hasattr(self.bed, "bed_number"):
             return f"{name} - {self.ward} Bed: {self.bed.bed_number}"
         return f"{name} - {self.ward} (No Bed Assigned)"
 
-    
-        
+
+
 class Doctor(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, primary_key=True)
     specialization = models.CharField(max_length=100, blank=True)
@@ -161,19 +160,21 @@ class Doctor(models.Model):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"Dr. {self.user.get_full_name() or self.user.username}"
-    
+        name = self.user.get_full_name() if self.user and hasattr(self.user, "get_full_name") else (self.user.username if self.user and hasattr(self.user, "username") else "")
+        return f"Dr. {name}"
+
 
 class WardReading(models.Model):
     ward = models.ForeignKey(Ward, on_delete=models.CASCADE)
     temperature = models.FloatField()
     humidity = models.FloatField()
     noise_level = models.FloatField()
+    light_intensity = models.FloatField(null=True, blank=True)
     timestamp = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         verbose_name_plural = "Ward Readings"
-        ordering = ['-timestamp'] 
+        ordering = ['-timestamp']
 
     def __str__(self):
         return f"{self.ward} {self.timestamp}"
@@ -192,6 +193,3 @@ class PatientVitals(models.Model):
 
     def __str__(self):
         return f"{self.patient} @ {self.timestamp}"
-
-
-
