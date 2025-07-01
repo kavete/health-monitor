@@ -11,7 +11,7 @@ The data is saved to:
 
 Feeds monitored:
 - Ward temperature
-- Ward humidity  
+- Ward humidity
 - Light intensity
 - Patient temperature
 """
@@ -80,10 +80,10 @@ def on_disconnect(client, userdata, rc):
 def on_message(client, userdata, msg):
     from datetime import datetime
     print(f" Received from {msg.topic}: {msg.payload.decode()}")
-    
+
     try:
         value = float(msg.payload.decode())
-        
+
         # Update sensor cache based on topic
         if msg.topic == WARD_TEMP_FEED:
             sensor_cache["ward_temperature"] = value
@@ -99,13 +99,13 @@ def on_message(client, userdata, msg):
             print(f" Light intensity: {value}")
 
         # Save ward readings if we have ward temperature, humidity, and light intensity
-        if (sensor_cache["ward_temperature"] is not None and 
-            sensor_cache["ward_humidity"] is not None and 
+        if (sensor_cache["ward_temperature"] is not None and
+            sensor_cache["ward_humidity"] is not None and
             sensor_cache["light_intensity"] is not None):
-            
+
             try:
                 ward = Ward.objects.get(id=WARD_ID)
-                
+
                 WardReading.objects.create(
                     ward=ward,
                     temperature=sensor_cache["ward_temperature"],
@@ -113,36 +113,36 @@ def on_message(client, userdata, msg):
                     noise_level=DEFAULT_NOISE_LEVEL,  # Default value, can be updated when noise sensor is added
                     light_intensity=sensor_cache["light_intensity"]
                 )
-                
+
                 print(f"Saved ward reading: T={sensor_cache['ward_temperature']}°C, H={sensor_cache['ward_humidity']}%, L={sensor_cache['light_intensity']}")
-                
+
                 # Reset ward-related cache
                 sensor_cache["ward_temperature"] = None
                 sensor_cache["ward_humidity"] = None
                 sensor_cache["light_intensity"] = None
-                
+
             except Ward.DoesNotExist:
                 print(f"✗ Ward with ID {WARD_ID} not found")
             except Exception as e:
                 print(f"✗ Error saving ward reading: {e}")
-        
+
         # Save patient vitals if we have patient temperature
         if sensor_cache["patient_temperature"] is not None:
             try:
                 patient = Patient.objects.get(user_id=PATIENT_ID)
-                
+
                 PatientVitals.objects.create(
                     patient=patient,
                     temperature=sensor_cache["patient_temperature"],
                     heart_rate=DEFAULT_HEART_RATE,  # Default value - should come from heart rate sensor
                     oxygen_saturation=DEFAULT_OXYGEN_SATURATION  # Default value - should come from pulse oximeter
                 )
-                
+
                 print(f"✅ Saved patient vitals: T={sensor_cache['patient_temperature']}°C")
-                
+
                 # Reset patient cache
                 sensor_cache["patient_temperature"] = None
-                
+
             except Patient.DoesNotExist:
                 print(f"✗ Patient with user_id {PATIENT_ID} not found")
             except Exception as e:

@@ -37,7 +37,7 @@ sensor_cache = {
 
 def on_connect(client, userdata, flags, rc):
     if rc == 0:
-        print("✓ Connected to MQTT broker successfully")
+        print("Connected to MQTT broker successfully")
 
         # Subscribe to all Pico topics
         topics = [
@@ -76,7 +76,7 @@ def save_ward_reading():
                 light_intensity=sensor_cache["ward_light"]
             )
 
-            print(f"✅ Saved ward reading: T={ward_temp}°C, H={sensor_cache['ward_humidity']}%, Sound={sensor_cache['ward_sound']}, Light={sensor_cache['ward_light']}")
+            print(f"Saved ward reading: T={ward_temp}°C, H={sensor_cache['ward_humidity']}%, Sound={sensor_cache['ward_sound']}, Light={sensor_cache['ward_light']}")
 
             # Reset ward cache after saving
             sensor_cache["ward_temp_dht"] = None
@@ -86,9 +86,9 @@ def save_ward_reading():
             sensor_cache["ward_light"] = None
 
     except Ward.DoesNotExist:
-        print(f"✗ Ward with ID {DEFAULT_WARD_ID} not found. Please create a ward in the admin panel.")
+        print(f"Ward with ID {DEFAULT_WARD_ID} not found. Please create a ward in the admin panel.")
     except Exception as e:
-        print(f"✗ Error saving ward reading: {e}")
+        print(f"Error saving ward reading: {e}")
 
 def save_patient_vitals():
     """Save patient vitals when we have sufficient patient sensor data"""
@@ -108,7 +108,7 @@ def save_patient_vitals():
                 oxygen_saturation=sensor_cache["patient_spo2"]
             )
 
-            print(f"✅ Saved patient vitals: T={patient_temp}°C, HR={sensor_cache['patient_heart_rate']}bpm, SpO2={sensor_cache['patient_spo2']}%")
+            print(f"Saved patient vitals: T={patient_temp}°C, HR={sensor_cache['patient_heart_rate']}bpm, SpO2={sensor_cache['patient_spo2']}%")
 
             # Reset patient cache after saving
             sensor_cache["patient_spo2"] = None
@@ -122,7 +122,7 @@ def save_patient_vitals():
 def on_message(client, userdata, msg):
     topic = msg.topic
     payload = msg.payload.decode()
-    print(f"📡 Received: {topic} => {payload}")
+    print(f"Received: {topic} => {payload}")
 
     try:
         value = float(payload)
@@ -131,31 +131,31 @@ def on_message(client, userdata, msg):
         # Process different sensor topics
         if topic == TOPIC_TEMP_DHT:
             sensor_cache["ward_temp_dht"] = value
-            print(f"🌡️  DHT Temperature: {value}°C")
+            print(f"DHT Temperature: {value}°C")
 
         elif topic == TOPIC_TEMP_LM35:
             sensor_cache["ward_temp_lm35"] = value
-            print(f"🌡️  LM35 Temperature: {value}°C")
+            print(f"LM35 Temperature: {value}°C")
 
         elif topic == TOPIC_HUMID:
             sensor_cache["ward_humidity"] = value
-            print(f"💧 Humidity: {value}%")
+            print(f"Humidity: {value}%")
 
         elif topic == TOPIC_SOUND:
             sensor_cache["ward_sound"] = value
-            print(f"🔊 Sound Level: {value} dB")
+            print(f"Sound Level: {value} dB")
 
         elif topic == TOPIC_LIGHT:
             sensor_cache["ward_light"] = value
-            print(f"💡 Light Intensity: {value}")
+            print(f"Light Intensity: {value}")
 
         elif topic == TOPIC_SPO2:
             sensor_cache["patient_spo2"] = value
-            print(f"🫁 Blood Oxygen (SpO2): {value}%")
+            print(f"Blood Oxygen (SpO2): {value}%")
 
         elif topic == TOPIC_HEART_RATE:
             sensor_cache["patient_heart_rate"] = value
-            print(f"❤️  Heart Rate: {value} bpm")
+            print(f"Heart Rate: {value} bpm")
 
         # Try to save complete readings
         save_ward_reading()
@@ -169,26 +169,26 @@ def on_message(client, userdata, msg):
 def print_startup_info():
     """Print startup information and configuration"""
     print("=" * 60)
-    print("🏥 HEALTH MONITOR MQTT CONSUMER")
+    print("HEALTH MONITOR MQTT CONSUMER")
     print("=" * 60)
-    print(f"📡 Connecting to MQTT broker at 127.0.0.1:1883")
-    print(f"🏥 Ward readings will be saved to Ward ID: {DEFAULT_WARD_ID}")
-    print(f"🩺 Patient vitals will be saved to Patient ID: {DEFAULT_PATIENT_ID}")
+    print(f"Connecting to MQTT broker at 127.0.0.1:1883")
+    print(f"Ward readings will be saved to Ward ID: {DEFAULT_WARD_ID}")
+    print(f"Patient vitals will be saved to Patient ID: {DEFAULT_PATIENT_ID}")
     print()
-    print("📋 Monitoring Topics:")
-    print(f"   🌡️  DHT Temperature: {TOPIC_TEMP_DHT}")
-    print(f"   🌡️  LM35 Temperature: {TOPIC_TEMP_LM35}")
-    print(f"   💧 Humidity: {TOPIC_HUMID}")
-    print(f"   🔊 Sound Level: {TOPIC_SOUND}")
-    print(f"   💡 Light Intensity: {TOPIC_LIGHT}")
-    print(f"   🫁 Blood Oxygen (SpO2): {TOPIC_SPO2}")
-    print(f"   ❤️  Heart Rate: {TOPIC_HEART_RATE}")
+    print("Monitoring Topics:")
+    print(f"    DHT Temperature: {TOPIC_TEMP_DHT}")
+    print(f"    LM35 Temperature: {TOPIC_TEMP_LM35}")
+    print(f"    Humidity: {TOPIC_HUMID}")
+    print(f"    Sound Level: {TOPIC_SOUND}")
+    print(f"    Light Intensity: {TOPIC_LIGHT}")
+    print(f"    Blood Oxygen (SpO2): {TOPIC_SPO2}")
+    print(f"    Heart Rate: {TOPIC_HEART_RATE}")
     print()
-    print("📊 Data Storage:")
+    print(" Data Storage:")
     print("   • Ward environmental data → WardReading model")
     print("   • Patient vital signs → PatientVitals model")
     print()
-    print("🚀 Starting MQTT listener... (Press Ctrl+C to stop)")
+    print(" Starting MQTT listener... (Press Ctrl+C to stop)")
     print("=" * 60)
 
 def main():
@@ -202,17 +202,17 @@ def main():
         # Connect to local MQTT broker (Mosquitto)
         client.connect("127.0.0.1", 1883, 60)
 
-        print("🔄 Starting MQTT loop...")
+        print(" Starting MQTT loop...")
         client.loop_forever()
 
     except KeyboardInterrupt:
-        print("\n⏹️  Stopping MQTT consumer...")
+        print("\n  Stopping MQTT consumer...")
         client.disconnect()
-        print("✅ Disconnected successfully")
+        print(" Disconnnected via KeyboardInterrupt")
     except Exception as e:
         print(f"❌ Connection error: {e}")
-        print("💡 Make sure your MQTT broker (Mosquitto) is running on 127.0.0.1:1883")
-        print("💡 You can start it with: sudo systemctl start mosquitto")
+        print(" Make sure your MQTT broker (Mosquitto) is running on 127.0.0.1:1883")
+        print(" You can start it with: sudo systemctl start mosquitto")
 
 if __name__ == "__main__":
     main()

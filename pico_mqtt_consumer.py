@@ -70,7 +70,7 @@ def init_csv_files():
             with open(csv_file, 'w', newline='') as f:
                 writer = csv.writer(f)
                 writer.writerow(headers)
-            print(f"📄 Created CSV file: {csv_file}")
+            print(f"Created CSV file: {csv_file}")
 
 # Sensor data cache
 sensor_cache = {
@@ -109,7 +109,7 @@ def log_ward_to_csv():
                 sensor_cache["ward_sound"],
                 sensor_cache["ward_light"]
             ])
-        print(f"📄 Logged ward data to CSV")
+        print(f"Logged ward data to CSV")
     except Exception as e:
         print(f"✗ Error writing ward data to CSV: {e}")
 
@@ -128,7 +128,7 @@ def log_patient_to_csv():
                 sensor_cache["patient_heart_rate"],
                 sensor_cache["patient_spo2"]
             ])
-        print(f"📄 Logged patient vitals to CSV")
+        print(f"Logged patient vitals to CSV")
     except Exception as e:
         print(f"✗ Error writing patient data to CSV: {e}")
 
@@ -149,7 +149,7 @@ def save_ward_reading():
                 light_intensity=sensor_cache["ward_light"]
             )
 
-            print(f"💾 Saved ward reading #{reading.id}: T={ward_temp}°C, H={sensor_cache['ward_humidity']}%, Sound={sensor_cache['ward_sound']}, Light={sensor_cache['ward_light']}")
+            print(f"Saved ward reading #{reading.id}: T={ward_temp}°C, H={sensor_cache['ward_humidity']}%, Sound={sensor_cache['ward_sound']}, Light={sensor_cache['ward_light']}")
 
             # Log to CSV
             log_ward_to_csv()
@@ -185,7 +185,7 @@ def save_patient_vitals():
                 oxygen_saturation=sensor_cache["patient_spo2"]
             )
 
-            print(f"💾 Saved patient vitals #{vitals.id}: T={patient_temp}°C, HR={sensor_cache['patient_heart_rate']}bpm, SpO2={sensor_cache['patient_spo2']}%")
+            print(f"Saved patient vitals #{vitals.id}: T={patient_temp}°C, HR={sensor_cache['patient_heart_rate']}bpm, SpO2={sensor_cache['patient_spo2']}%")
 
             # Log to CSV
             log_patient_to_csv()

@@ -1,0 +1,3 @@
+static/admin/* linguist-vendored
+static/js/htmx.min.js linguist-vendored
+static/js/chart.js linguist-vendored
