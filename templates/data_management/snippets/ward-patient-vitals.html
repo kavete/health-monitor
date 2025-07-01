@@ -1,9 +1,11 @@
-<div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 mb-8 m-4">
+<div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 mb-8">
     {% for vital in patient_vitals %}
     <div class="card bg-base-100 shadow-lg border-l-4 border-l-primary">
         <div class="card-body p-4">
             <h3 class="card-title text-lg">
-                {{ vital.patient.user.username }}
+                <a href="{% url 'patient_detail' patient_id=vital.patient.pk %}" class="hover:text-primary">
+                    {{ vital.patient.user.username }}
+                </a>
             </h3>
             <p class="text-sm text-gray-600 mb-3">
                 {% if vital.patient.bed %} {{ vital.patient.ward.name }} - Bed {{ vital.patient.bed.bed_number }} {% else %} No bed
@@ -37,6 +39,12 @@
             </div>
             <div class="text-xs text-gray-500 mt-3">
                 Last updated: {{ vital.timestamp|date:'Y-m-d H:i:s' }}
+            </div>
+
+            <div class="card-actions justify-end mt-3">
+                <a href="{% url 'patient_detail' patient_id=vital.patient.pk %}" class="btn btn-primary btn-sm">
+                    View Details
+                </a>
             </div>
         </div>
     </div>

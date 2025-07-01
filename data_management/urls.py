@@ -16,4 +16,9 @@ urlpatterns = [
     path("ward/<slug:ward_slug>/htmx-ward-status/", views.htmx_ward_status, name="ward-status"),
     path("ward/<slug:ward_slug>/chart-data/", views.ward_chart_data, name="ward-chart-data"),
 
+    # Patient URLs
+    path('patient/<int:patient_id>/', views.patient_details, name='patient_detail'),
+    path('patient/<int:patient_id>/vitals-status/', views.htmx_patient_vitals_status, name='patient-vitals-status'),
+    path('patient/<int:patient_id>/chart-data/', views.patient_chart_data, name='patient-chart-data'),
+
 ]

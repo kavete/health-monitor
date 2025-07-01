@@ -1,5 +1,5 @@
 <div
-    class="grid grid-cols-1 xl:grid-cols-2 xxl:grid-cols-4 gap-6 mb-8 mt-4 m-4"
+    class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4 mb-8 mt-4"
 >
     <div class="card bg-base-100 shadow-lg">
         <div class="card-body">
@@ -48,7 +48,7 @@
         let lightChart;
 
         function initializeCharts() {
-            // Temperature Chart
+            // Temperature Chart - Dynamic scaling
             const tempCtx = document
                 .getElementById("temperatureChart")
                 .getContext("2d");
@@ -77,6 +77,7 @@
                                 display: true,
                                 text: "Temperature (°C)",
                             },
+                            grace: '5%', // Dynamic padding
                         },
                         x: {
                             title: {
@@ -93,7 +94,7 @@
                 },
             });
 
-            // Humidity Chart
+            // Humidity Chart - Dynamic scaling
             const humCtx = document
                 .getElementById("humidityChart")
                 .getContext("2d");
@@ -117,12 +118,12 @@
                     maintainAspectRatio: false,
                     scales: {
                         y: {
-                            beginAtZero: true,
-                            max: 100,
+                            beginAtZero: false,
                             title: {
                                 display: true,
                                 text: "Humidity (%)",
                             },
+                            grace: '5%', // Dynamic padding
                         },
                         x: {
                             title: {
@@ -139,7 +140,7 @@
                 },
             });
 
-            // Noise Chart
+            // Noise Chart - Dynamic scaling
             const noiseCtx = document
                 .getElementById("noiseChart")
                 .getContext("2d");
@@ -163,11 +164,12 @@
                     maintainAspectRatio: false,
                     scales: {
                         y: {
-                            beginAtZero: true,
+                            beginAtZero: false,
                             title: {
                                 display: true,
                                 text: "Noise Level (dB)",
                             },
+                            grace: '5%', // Dynamic padding
                         },
                         x: {
                             title: {
@@ -184,7 +186,7 @@
                 },
             });
 
-            // Light Intensity Chart
+            // Light Intensity Chart - Dynamic scaling
             const lightCtx = document
                 .getElementById("lightChart")
                 .getContext("2d");
@@ -208,11 +210,12 @@
                     maintainAspectRatio: false,
                     scales: {
                         y: {
-                            beginAtZero: true,
+                            beginAtZero: false,
                             title: {
                                 display: true,
                                 text: "Light Intensity (lux)",
                             },
+                            grace: '5%', // Dynamic padding
                         },
                         x: {
                             title: {
@@ -234,24 +237,78 @@
             fetch(chartDataUrl)
                 .then((response) => response.json())
                 .then((data) => {
-                    // Update temperature chart
+                    console.log('Ward chart data received:', data);
+
+                    // Update temperature chart with dynamic scaling
                     temperatureChart.data.labels = data.labels;
                     temperatureChart.data.datasets[0].data = data.temperature;
+                    
+                    // Calculate temperature range for better scaling
+                    const tempValues = data.temperature.filter(val => val !== null && val !== undefined);
+                    if (tempValues.length > 0) {
+                        const minTemp = Math.min(...tempValues);
+                        const maxTemp = Math.max(...tempValues);
+                        const tempRange = maxTemp - minTemp;
+                        const padding = Math.max(0.5, tempRange * 0.1); // At least 0.5°C padding
+                        
+                        temperatureChart.options.scales.y.min = minTemp - padding;
+                        temperatureChart.options.scales.y.max = maxTemp + padding;
+                    }
+                    
                     temperatureChart.update();
 
-                    // Update humidity chart
+                    // Update humidity chart with dynamic scaling
                     humidityChart.data.labels = data.labels;
                     humidityChart.data.datasets[0].data = data.humidity;
+                    
+                    // Calculate humidity range for better scaling
+                    const humidityValues = data.humidity.filter(val => val !== null && val !== undefined);
+                    if (humidityValues.length > 0) {
+                        const minHumidity = Math.min(...humidityValues);
+                        const maxHumidity = Math.max(...humidityValues);
+                        const humidityRange = maxHumidity - minHumidity;
+                        const padding = Math.max(2, humidityRange * 0.1); // At least 2% padding
+                        
+                        humidityChart.options.scales.y.min = Math.max(0, minHumidity - padding);
+                        humidityChart.options.scales.y.max = Math.min(100, maxHumidity + padding);
+                    }
+                    
                     humidityChart.update();
 
-                    // Update noise chart
+                    // Update noise chart with dynamic scaling
                     noiseChart.data.labels = data.labels;
                     noiseChart.data.datasets[0].data = data.noise_level;
+                    
+                    // Calculate noise range for better scaling
+                    const noiseValues = data.noise_level.filter(val => val !== null && val !== undefined);
+                    if (noiseValues.length > 0) {
+                        const minNoise = Math.min(...noiseValues);
+                        const maxNoise = Math.max(...noiseValues);
+                        const noiseRange = maxNoise - minNoise;
+                        const padding = Math.max(2, noiseRange * 0.1); // At least 2dB padding
+                        
+                        noiseChart.options.scales.y.min = Math.max(0, minNoise - padding);
+                        noiseChart.options.scales.y.max = maxNoise + padding;
+                    }
+                    
                     noiseChart.update();
 
-                    // Update light intensity chart
+                    // Update light intensity chart with dynamic scaling
                     lightChart.data.labels = data.labels;
                     lightChart.data.datasets[0].data = data.light_intensity;
+                    
+                    // Calculate light intensity range for better scaling
+                    const lightValues = data.light_intensity.filter(val => val !== null && val !== undefined);
+                    if (lightValues.length > 0) {
+                        const minLight = Math.min(...lightValues);
+                        const maxLight = Math.max(...lightValues);
+                        const lightRange = maxLight - minLight;
+                        const padding = Math.max(10, lightRange * 0.1); // At least 10 lux padding
+                        
+                        lightChart.options.scales.y.min = Math.max(0, minLight - padding);
+                        lightChart.options.scales.y.max = maxLight + padding;
+                    }
+                    
                     lightChart.update();
                 })
                 .catch((error) => {

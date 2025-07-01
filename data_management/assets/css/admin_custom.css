@@ -1,0 +1,10 @@
+/* Hide django-daisy footer link */
+a[href="https://github.com/hypy13/django-daisy"] {
+    display: none !important;
+}
+
+/* More specific targeting */
+a.block.p-2[href*="github.com/hypy13/django-daisy"] {
+    display: none !important;
+}
+
