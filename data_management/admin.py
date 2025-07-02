@@ -12,6 +12,12 @@ class CustomUserAdmin(UserAdmin):
     fieldsets = UserAdmin.fieldsets + (
         ('Role', {'fields': ('is_doctor', 'is_patient')}),
     )
+    add_fieldsets = UserAdmin.add_fieldsets + (
+        ('Personal info', {'fields': ('email',)}),
+        ('Role', {'fields': ('is_doctor', 'is_patient')}),
+    )
+    list_display = ['username', 'email', 'first_name', 'last_name', 'is_doctor', 'is_patient', 'is_staff']
+    list_filter = ['is_doctor', 'is_patient', 'is_staff', 'is_superuser', 'is_active']
 
 admin.site.register(CustomUser, CustomUserAdmin)
 # Optional: restrict microcontroller choices in forms

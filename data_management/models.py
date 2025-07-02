@@ -111,7 +111,7 @@ class Bed(models.Model):
 class CustomUser(AbstractUser):
     is_doctor = models.BooleanField(default=False)
     is_patient = models.BooleanField(default=False)
-    email = models.EmailField(unique=True)
+    email = models.EmailField(unique=True, blank=True, null=True)
 
 
     def __str__(self):

@@ -4,6 +4,8 @@ from django.db.models import Max
 from django.http import JsonResponse
 from django.utils import timezone
 import json
+from django.contrib.auth.decorators import login_required
+
 
 def get_dashboard_stats():
     return {
@@ -49,7 +51,7 @@ def get_chart_data():
         'chart_noise': json.dumps(noise),
         'chart_light_intensity': json.dumps(light_intensity),
     }
-
+@login_required
 def dashboard(request):
     stats= get_dashboard_stats()
     latest_conditions = get_latest_ward_conditions()
@@ -84,6 +86,7 @@ def dashboard_charts_json(request):
 def get_patient_vitals_data(ward):
     """
     Returns a list of the latest PatientVitals for each patient in the given ward.
+    If a patient has no vitals, returns a dict with patient info and None for vitals.
     """
     patients_in_ward = Patient.objects.filter(bed__ward=ward).select_related('bed')
     patient_vitals = []

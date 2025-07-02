@@ -3885,6 +3885,9 @@
   .border-l-primary {
     border-left-color: var(--color-primary);
   }
+  .border-l-warning {
+    border-left-color: var(--color-warning);
+  }
   .bg-base-100 {
     background-color: var(--color-base-100);
   }

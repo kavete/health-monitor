@@ -3,13 +3,16 @@
     <div class="card bg-base-100 shadow-lg border-l-4 border-l-primary">
         <div class="card-body p-4">
             <h3 class="card-title text-lg">
-                <a href="{% url 'patient_detail' patient_id=vital.patient.pk %}" class="hover:text-primary">
+                <a
+                    href="{% url 'patient_detail' patient_id=vital.patient.pk %}"
+                    class="hover:text-primary"
+                >
                     {{ vital.patient.user.username }}
                 </a>
             </h3>
             <p class="text-sm text-gray-600 mb-3">
-                {% if vital.patient.bed %} {{ vital.patient.ward.name }} - Bed {{ vital.patient.bed.bed_number }} {% else %} No bed
-                assigned {% endif %}
+                {% if vital.patient.bed %} {{ vital.patient.ward.name }} - Bed
+                {{ vital.patient.bed.bed_number }} {% else %} No bed assigned {% endif %}
             </p>
 
             <div class="grid grid-cols-2 gap-3 text-sm">
@@ -20,29 +23,30 @@
                 <span class="font-semibold"> {{ vital.heart_rate }} bpm</span>
 
                 <div class="flex items-center">
-                    <span
-                        class="w-3 h-3 bg-orange-500 rounded-full mr-2"
-                    ></span>
+                    <span class="w-3 h-3 bg-orange-500 rounded-full mr-2"></span>
                     <span class="text-gray-600">Temperature:</span>
                 </div>
                 <span class="font-semibold">
-                    {{ vital.temperature|floatformat:1 }} °C</span
-                >
+                    {{ vital.temperature|floatformat:1 }} °C
+                </span>
 
                 <div class="flex items-center">
                     <span class="w-3 h-3 bg-green-500 rounded-full mr-2"></span>
                     <span class="text-gray-600">O2 Saturation:</span>
                 </div>
                 <span class="font-semibold">
-                    {{ vital.oxygen_saturation|floatformat:1 }} %</span
-                >
+                    {{ vital.oxygen_saturation|floatformat:1 }} %
+                </span>
             </div>
             <div class="text-xs text-gray-500 mt-3">
                 Last updated: {{ vital.timestamp|date:'Y-m-d H:i:s' }}
             </div>
 
             <div class="card-actions justify-end mt-3">
-                <a href="{% url 'patient_detail' patient_id=vital.patient.pk %}" class="btn btn-primary btn-sm">
+                <a
+                    href="{% url 'patient_detail' patient_id=vital.patient.pk %}"
+                    class="btn btn-primary btn-sm"
+                >
                     View Details
                 </a>
             </div>
