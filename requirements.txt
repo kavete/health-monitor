@@ -1,8 +1,8 @@
-asgiref @ file:///work/perseverance-python-buildout/croot/asgiref_1728402006833/work
-Django @ file:///croot/django_1745263580040/work
+asgiref
+Django
 django-daisy==1.0.26
 paho-mqtt==2.1.0
 setuptools==78.1.1
-sqlparse @ file:///io/buildout/croot/sqlparse_1739627228514/work
-typing_extensions @ file:///croot/typing_extensions_1734714854207/work
+sqlparse
+typing_extensions
 wheel==0.45.1
