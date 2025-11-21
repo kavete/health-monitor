@@ -1,3 +1,4 @@
 static/admin/* linguist-vendored
 static/js/htmx.min.js linguist-vendored
 static/js/chart.js linguist-vendored
+static/css/styles.css linguist-vendored
